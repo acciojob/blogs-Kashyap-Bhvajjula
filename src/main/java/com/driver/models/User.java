@@ -1,6 +1,5 @@
 package com.driver.models;
 
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,18 +10,23 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int id;
+    private int id;
+    //    @Column(unique = true)
     private String username;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
 
-    public int getId() {
-        return id;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Blog> blogList = new ArrayList<>();
+
+    public User() {
     }
-
-    public void setId(int id) {
-        this.id = id;
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.firstname = "test";
+        this.lastname = "test";
     }
 
     public String getUsername() {
@@ -41,34 +45,35 @@ public class User {
         this.password = password;
     }
 
-    public List<Blog> getBlogList()
-    {
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public List<Blog> getBlogList() {
         return blogList;
     }
 
-    public void setBlogList(List<Blog> blogList)
-    {
+    public void setBlogList(List<Blog> blogList) {
         this.blogList = blogList;
     }
 
-    public String getFirstName()
-    {
-        return firstName;
+    public int getId() {
+        return id;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setId(int id) {
+        this.id = id;
     }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName)
-    {
-        this.lastName = lastName;
-    }
-
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Blog>blogList=new ArrayList<>();
 }

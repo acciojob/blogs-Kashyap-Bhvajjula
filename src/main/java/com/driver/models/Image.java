@@ -1,16 +1,14 @@
 package com.driver.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.lang.String;
 import javax.persistence.*;
 
 @Entity
 @Table
 public class Image {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id ;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     private String description;
     private String dimensions;
 
@@ -24,6 +22,7 @@ public class Image {
         this.description = description;
         this.dimensions = dimensions;
     }
+
     public String getDescription() {
         return description;
     }

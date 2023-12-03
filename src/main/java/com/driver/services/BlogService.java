@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BlogService {
@@ -21,31 +22,25 @@ public class BlogService {
     @Autowired
     UserRepository userRepository1;
 
-    public Blog createAndReturnBlog(Integer userId, String title, String content) {
+    public Blog createAndReturnBlog(Integer userId, String title, String content){
         //create a blog at the current time
-        //get user object
-        User user = userRepository1.findById(userId).get();
-        Blog blog = new Blog(title,content);//created new blog and now
-        //set the other details in it
-
-        //blog.setTitle(title);
-        //blog.setContent(content);
+        Blog blog = new Blog(title, content);
         blog.setPubDate(new Date());
+
+        User user = userRepository1.findById(userId).get();
         blog.setUser(user);
-
-        //get blog list from user to add this new blog to it
-        /*List<Blog> blogList = user.getBlogList() ;
+        List<Blog> blogList = user.getBlogList();
         blogList.add(blog);
-        user.setBlogList(blogList);*/
+        user.setBlogList(blogList);
 
-        user.getBlogList().add(blog);
         userRepository1.save(user);
+
         return blog;
+
     }
 
-    public void deleteBlog(int blogId){
+    public void deleteBlog(int blogId) {
         //delete blog and corresponding images
         blogRepository1.deleteById(blogId);
-
     }
 }

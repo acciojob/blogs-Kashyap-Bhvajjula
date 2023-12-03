@@ -18,42 +18,20 @@ public class ImageService {
 
     public Image addImage(Integer blogId, String description, String dimensions){
         //add an image to the blog
-
-        /*
-        * Image image = new Image(description, dimensions);
-        Blog blog = blogRepository2.findById(blogId).get();
-
-        image.setBlog(blog);
-        blog.getImageList().add(image);
-        * */
-        /*Image image = new Image();
-        image.setDimensions(description);
-        image.setDimensions(dimensions);
-
-        Blog blog = blogRepository2.findById(blogId).get();
-        image.setBlog(blog);
-        blog.getImageList().add(image);*/
-
-        //add imagelist to blog
-        //add image to image list
-        //or
-        // List<Image> imageList = blog.getImageList();
-        //imageList.add(image);
-
         Optional<Blog> optionalBlog = blogRepository2.findById(blogId);
-        if(!optionalBlog.isPresent()){
-            System.out.println("Image service blog not found");
+        if(!optionalBlog.isPresent()) {
+            System.out.println("ImageService Blog not found");
             return null;
         }
-
-        if(description==null || description.equals(""))
+        if(description == null || description.equals("")) {
             return null;
-
-        if(dimensions==null || dimensions.equals(""))
+        }
+        if(dimensions == null || dimensions.equals("")) {
             return null;
-
+        }
         Blog blog = optionalBlog.get();
         Image image = new Image(description, dimensions);
+
         image.setBlog(blog);
 
         List<Image> blogImageList = blog.getImageList();
@@ -61,33 +39,36 @@ public class ImageService {
         blog.setImageList(blogImageList);
 
         blogRepository2.save(blog);
+
         return image;
     }
 
-    public void deleteImage(Integer id){
+    public void deleteImage(Integer id) {
         imageRepository2.deleteById(id);
     }
 
     public int countImagesInScreen(Integer id, String screenDimensions) {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
+        Optional<Image> optionalImage= imageRepository2.findById(id);
+//        if(!optionalImage.isPresent()) {
+//            throw new Exception("Image not found");
+//        }
+        Image image = optionalImage.get();
+        String imageDimension = image.getDimensions();
 
-        //get the obj
-        Image image = imageRepository2.findById(id).get();
-        // get image dimension in form of string
-        String givenDimensions = image.getDimensions();
+        int image_index_X = imageDimension.indexOf('X');
+        int imageLength = Integer.parseInt(imageDimension.substring(0, image_index_X));
+        int imageBreadth = Integer.parseInt(imageDimension.substring(image_index_X+1));
 
-        String [] givenDimension = givenDimensions.split("X"); //10X20X30==>[10,20,30]
-        String [] screenDimension = screenDimensions.split("X");
+        int screen_index_X = screenDimensions.indexOf('X');
+        int screenLength = Integer.parseInt(screenDimensions.substring(0, screen_index_X));
+        int screenBreadth = Integer.parseInt(screenDimensions.substring(screen_index_X+1));
 
-        int givenWidth = Integer.parseInt(givenDimension[0]); //convert string to integer
-        int givenHeight = Integer.parseInt(givenDimension[1]);
+        int fitLength = screenLength / imageLength;
+        int fitBreadth = screenBreadth / imageBreadth;
 
-        int screenWidth = Integer.parseInt(screenDimension[0]);
-        int screenHeight = Integer.parseInt(screenDimension[1]);
+        int imagesFit = fitBreadth * fitLength;
 
-        int width = screenWidth/givenWidth;
-        int height = screenHeight/givenHeight;
-
-        return width*height ;
+        return imagesFit;
     }
 }
